@@ -1,30 +1,60 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+    <div v-for="project in projects" :key="project.id">
+      <ProjectCard :project="project" />
+    </div>
+
+    <div class="pagination">
+      <button @click="fetchPage(prevPageUrl)" :disabled="!prevPageUrl">Previous</button>
+      <button @click="fetchPage(nextPageUrl)" :disabled="!nextPageUrl">Next</button>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
+<script>
+
+import ProjectCard from './components/ProjectCard.vue';
+import axios from 'axios';
+
+export default {
+  name: 'App',
+  components: {
+    
+    ProjectCard,
+  },
+  data() {
+    return {
+      projects: [],
+      prevPageUrl: null,
+      nextPageUrl: null,
+    };
+  },
+  mounted() {
+    this.fetchPage('http://localhost:8000/api/projectIndex'); // Fetch initial page
+  },
+  methods: {
+    fetchPage(url) {
+      axios.get(url)
+        .then(response => {
+          this.projects = response.data.projects.data;
+          this.prevPageUrl = response.data.projects.prev_page_url;
+          this.nextPageUrl = response.data.projects.next_page_url;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+  },
+};
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.pagination button {
+  margin: 0 5px;
 }
 </style>
