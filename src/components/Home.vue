@@ -1,6 +1,6 @@
 <template>
     <div>
-      <Header />
+      
   
       <div v-for="project in projects" :key="project.id">
         <ProjectCard :project="project" />
@@ -14,9 +14,9 @@
   </template>
   
   <script>
-  import ProjectCard from './components/ProjectCard.vue';
+  import ProjectCard from './ProjectCard.vue';
   import axios from 'axios';
-  import Header from './components/Header.vue';
+  import Header from './Header.vue';
   
   export default {
     name: 'Home',

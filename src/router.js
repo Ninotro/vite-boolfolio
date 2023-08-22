@@ -15,7 +15,5 @@ const router = createRouter({
   routes,
 });
 
-const app = createApp(App);
-app.component('Header', Header);
-app.use(router);
-app.mount('#app');
+export { router };
+
